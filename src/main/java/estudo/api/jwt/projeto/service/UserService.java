@@ -33,6 +33,12 @@ public class UserService {
             throw new IllegalArgumentException("Senha é obrigatória");
         }
 
+        UserModel existingUser = repository.findByNome(userModel.getNome());
+
+        if (existingUser != null) {
+            throw new IllegalArgumentException("Já existe um usuário com este nome!");
+        }
+
 
       return repository.save(userModel);
     }
