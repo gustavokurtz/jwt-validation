@@ -3,7 +3,7 @@ package estudo.api.jwt.projeto.service;
 import estudo.api.jwt.projeto.model.UserModel;
 import estudo.api.jwt.projeto.repository.UserRepository;
 import jakarta.transaction.Transactional;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,10 +12,12 @@ import java.util.List;
 public class UserService {
 
     private final UserRepository repository;
+    private final PasswordEncoder passwordEncoder;
 
     // Injeção via construtor (recomendado)
-    public UserService(UserRepository repository) {
+    public UserService(UserRepository repository, PasswordEncoder passwordEncoder) {
         this.repository = repository;
+        this.passwordEncoder = passwordEncoder;
     }
 
     public List<UserModel> list(){
@@ -39,8 +41,10 @@ public class UserService {
             throw new IllegalArgumentException("Já existe um usuário com este nome!");
         }
 
+        // Criptografa a senha antes de salvar
+        userModel.setPassword(passwordEncoder.encode(userModel.getPassword()));
 
-      return repository.save(userModel);
+        return repository.save(userModel);
     }
 
     public UserModel listUserById(Long id){
@@ -53,16 +57,17 @@ public class UserService {
 
         // Atualiza apenas os campos permitidos
         existingUser.setNome(newUserData.getNome());
-        existingUser.setPassword(newUserData.getPassword());
 
-        // Se houver senha, adicione hash aqui!
+        // Se a senha estiver presente, criptografa antes de salvar
+        if (newUserData.getPassword() != null && !newUserData.getPassword().isBlank()) {
+            existingUser.setPassword(passwordEncoder.encode(newUserData.getPassword()));
+        }
+
         return repository.save(existingUser);
     }
-
 
     @Transactional
     public void deleteUser(Long id){
         repository.deleteById(id);
     }
-
 }

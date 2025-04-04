@@ -12,11 +12,11 @@ import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/users")
-public class UserController {
+public class RegisterController {
 
     private final UserService service;
 
-    public UserController(UserService service) {
+    public RegisterController(UserService service) {
         this.service = service;
     }
 
