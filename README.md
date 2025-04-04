@@ -58,12 +58,12 @@ src/main/java/estudo/api/jwt/projeto/
 
 1. Clone o repositório
    ```
-   git clone [URL do repositório]
+   git clone https://github.com/gustavokurtz/jwt-validation.git
    ```
 
 2. Navegue até o diretório do projeto
    ```
-   cd projeto
+   cd jwt-validation
    ```
 
 3. Execute a aplicação
